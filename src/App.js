@@ -35,12 +35,71 @@ const Magic = ({ text, count, radius, start = 0, position }) => {
       ease: "power3.inOut"
     });
   });
+  return (
+    <group
+      ref={$ref}
+      position={position}
+      rotation={[0, PI * 1.3, 0]}
+      scale={[-1, 1, 1]}
+    >
+      {text.split("").map((l, i) => (
+        <Letter key={`1${i}`} l={l} radius={radius} i={i} count={count} />
+      ))}
+    </group>
+  );
 };
+
+const Pavement = () => {
+  return (
+    <>
+      <Plane
+        rotation-x={-PI * 0.5}
+        position={[0, -7.9, 0]}
+        args={[200, 200]}
+        receiveShadow
+      >
+        <meshBasicMaterial
+          color={"#ffcda3"}
+          attach="material"
+          transparent={true}
+          opacity={0.4}
+        />
+      </Plane>
+      <Reflector
+        clipBias={0.1}
+        textureWidth={1024}
+        textureHeight={1024}
+        position={[0, -8, 0]}
+        rotation={[-PI * 0.5, 0, 0]}
+      >
+        <planeBufferGeometry args={[200, 200]} />
+      </Reflector>
+    </>
+  );
+};
+
 export default function App() {
   return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
-    </div>
+    <Canvas colorManagement camera={{ fov: 30, position: [0, 90, 180] }}>
+      <color attach="background" args={["#ebcfba"]} />
+      <directionalLight position={[-40, 20, 20]} color="#c59cf1" />
+      <directionalLight
+        position={[10.5, 20, 10]}
+        intensity={1.5}
+        color="#e78f48"
+      />
+      <ambientLight color="#8d69cb" />
+      <Suspense fallback={null}>
+        <Pavement />
+        <Environment preset="night" />
+        <Magic
+          text={"HAPPYBIRTHDAY"}
+          start={Math.PI * 1.18}
+          count={13}
+          radius={25}
+        />
+      </Suspense>
+      <OrbitControls />
+    </Canvas>
   );
 }
