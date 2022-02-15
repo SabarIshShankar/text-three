@@ -27,4 +27,50 @@ export default function Text({
     }),
     [font]
   );
+  const group = useRef();
+  const mesh = useUpdate(
+    (self) => {
+      const size = new THREE.Vector3();
+      self.geometry.computeBoundingBox();
+      self.geometry.boundingBox.getSize(size);
+      self.position.x +=
+        hAlign === "center" ? -size.x / 2 : hAlign === "right" ? 0 : -size.x;
+      self.position.y +=
+        vAlign === "center" ? -size.y / 2 : vAlign === "top" ? 0 : -size.y;
+    },
+    [children]
+  );
+
+  useEffect(() => {
+    gsap.defaults({
+      duration: 1.4,
+      ease: "power4.inOut",
+      delay: 1.5 + i * 0.1,
+      yoyo: true,
+      repeat: -1,
+      repeatDelay: 1.6
+    });
+    gsap.to(mesh.current.rotation, {
+      x: Math.PI * 0.5
+    });
+    gsap.to(group.current.position, {
+      y: 1.8
+    });
+  });
+
+  return (
+    <>
+      <group {...props} ref={group}>
+        <mesh ref={mesh}>
+          <textBufferGeometry args={[children, config]} />
+          <meshStandardMaterial
+            attach="material"
+            metalness={0.2}
+            roughness={0.3}
+            color="#a3e0ff"
+          />
+        </mesh>
+      </group>
+    </>
+  );
 }

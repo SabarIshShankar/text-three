@@ -1,14 +1,15 @@
-import "./styles.css";
 import React, { Suspense, useEffect, useRef } from "react";
 import { Canvas } from "react-three-fiber";
 import { OrbitControls, Environment, Plane, Reflector } from "drei";
 import gsap from "gsap";
 import Text from "./Text";
+import "./styles.css";
 
 const { PI, sin, cos } = Math;
 
 const Letter = ({ i, count, radius, l }) => {
   const $ref = useRef();
+
   return (
     <group ref={$ref} rotation={[0, 0, 0]}>
       <Text
@@ -16,7 +17,7 @@ const Letter = ({ i, count, radius, l }) => {
         position={[
           radius * sin((i / count) * PI * 2),
           -0.8,
-          radius * sin((i / count) * PI * 4)
+          radius * cos((i / count) * PI * 2)
         ]}
         rotation={[0, (i / count) * PI * 2, 0]}
         i={i}
@@ -25,6 +26,7 @@ const Letter = ({ i, count, radius, l }) => {
     </group>
   );
 };
+
 const Magic = ({ text, count, radius, start = 0, position }) => {
   const $ref = useRef();
   useEffect(() => {
@@ -59,7 +61,7 @@ const Pavement = () => {
         receiveShadow
       >
         <meshBasicMaterial
-          color={"#ffcda3"}
+          color={"#a3e0ff"}
           attach="material"
           transparent={true}
           opacity={0.4}
@@ -81,7 +83,7 @@ const Pavement = () => {
 export default function App() {
   return (
     <Canvas colorManagement camera={{ fov: 30, position: [0, 90, 180] }}>
-      <color attach="background" args={["#ebcfba"]} />
+      <color attach="background" args={["#a3e0ff"]} />
       <directionalLight position={[-40, 20, 20]} color="#c59cf1" />
       <directionalLight
         position={[10.5, 20, 10]}
